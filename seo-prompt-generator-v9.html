@@ -1,0 +1,1616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SEO Prompt Generator — Quality Benchmark Tool</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d10;
+    --bg2: #16161c;
+    --bg3: #1e1e27;
+    --surface: #22222e;
+    --surface2: #2a2a38;
+    --border: #32324a;
+    --border2: #3e3e5a;
+    --text: #e8e8f0;
+    --text2: #9898b8;
+    --text3: #5e5e7a;
+    --accent: #7c6af5;
+    --accent2: #a394f8;
+    --accent-bg: rgba(124,106,245,0.12);
+    --accent-border: rgba(124,106,245,0.35);
+    --gold: #d4a843;
+    --gold-bg: rgba(212,168,67,0.1);
+    --success: #4eca8b;
+    --success-bg: rgba(78,202,139,0.1);
+    --tag-score: #7c6af5;
+    --radius: 10px;
+    --radius-lg: 16px;
+    --shadow: 0 4px 24px rgba(0,0,0,0.4);
+    --transition: 0.25s cubic-bezier(0.4,0,0.2,1);
+  }
+  .theme-dusk {
+    --bg: #1a1520;
+    --bg2: #221a2e;
+    --bg3: #2b2038;
+    --surface: #32274a;
+    --surface2: #3c2f5a;
+    --border: #4a3868;
+    --border2: #5a4680;
+    --text: #f0e8f8;
+    --text2: #b09ace;
+    --text3: #6e5890;
+    --accent: #c084fc;
+    --accent2: #d8aaff;
+    --accent-bg: rgba(192,132,252,0.12);
+    --accent-border: rgba(192,132,252,0.35);
+    --gold: #f0a855;
+    --gold-bg: rgba(240,168,85,0.1);
+    --success: #68d9a4;
+    --success-bg: rgba(104,217,164,0.1);
+  }
+  .theme-forest {
+    --bg: #0d1410;
+    --bg2: #131c17;
+    --bg3: #18251d;
+    --surface: #1f2e24;
+    --surface2: #263a2c;
+    --border: #304838;
+    --border2: #3c5845;
+    --text: #e2f0e8;
+    --text2: #8ab89a;
+    --text3: #4e7460;
+    --accent: #4eca8b;
+    --accent2: #7ddcaa;
+    --accent-bg: rgba(78,202,139,0.12);
+    --accent-border: rgba(78,202,139,0.3);
+    --gold: #c8a840;
+    --gold-bg: rgba(200,168,64,0.1);
+    --success: #4eca8b;
+    --success-bg: rgba(78,202,139,0.1);
+  }
+  .theme-dawn {
+    --bg: #fff8f0;
+    --bg2: #fff3e8;
+    --bg3: #fdecd8;
+    --surface: #fde8d0;
+    --surface2: #f8dfc4;
+    --border: #e8c8a8;
+    --border2: #d8b490;
+    --text: #2c1a08;
+    --text2: #7a5030;
+    --text3: #b88050;
+    --accent: #c85818;
+    --accent2: #e07040;
+    --accent-bg: rgba(200,88,24,0.08);
+    --accent-border: rgba(200,88,24,0.25);
+    --gold: #b87800;
+    --gold-bg: rgba(184,120,0,0.08);
+    --success: #28804a;
+    --success-bg: rgba(40,128,74,0.1);
+  }
+  .theme-paper {
+    --bg: #f5f2ec;
+    --bg2: #ede8e0;
+    --bg3: #e4ddd2;
+    --surface: #ddd6c8;
+    --surface2: #d4ccbc;
+    --border: #bbb0a0;
+    --border2: #a09080;
+    --text: #1c1810;
+    --text2: #5c5040;
+    --text3: #9c8c7c;
+    --accent: #3a6ea8;
+    --accent2: #5888c0;
+    --accent-bg: rgba(58,110,168,0.08);
+    --accent-border: rgba(58,110,168,0.25);
+    --gold: #9a6e20;
+    --gold-bg: rgba(154,110,32,0.08);
+    --success: #2a6e40;
+    --success-bg: rgba(42,110,64,0.1);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    transition: background var(--transition), color var(--transition);
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  /* ─── Header ─── */
+  header {
+    background: var(--bg2);
+    border-bottom: 1px solid var(--border);
+    padding: 0 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    transition: background var(--transition), border-color var(--transition);
+  }
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .logo-icon {
+    width: 34px;
+    height: 34px;
+    background: var(--accent);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 17px;
+  }
+  .logo-text {
+    font-family: 'DM Serif Display', serif;
+    font-size: 18px;
+    color: var(--text);
+    letter-spacing: -0.3px;
+  }
+  .logo-badge {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.8px;
+    background: var(--accent-bg);
+    color: var(--accent2);
+    border: 1px solid var(--accent-border);
+    padding: 2px 7px;
+    border-radius: 20px;
+    text-transform: uppercase;
+  }
+
+  /* ─── Theme Switcher ─── */
+  .theme-switcher {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .theme-label {
+    font-size: 12px;
+    color: var(--text3);
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin-right: 4px;
+  }
+  .theme-btn {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: transform 0.15s, border-color 0.15s;
+    position: relative;
+  }
+  .theme-btn:hover { transform: scale(1.15); }
+  .theme-btn.active { border-color: var(--text); }
+  .theme-btn[data-theme="midnight"] { background: #0d0d10; box-shadow: 0 0 0 1px #5e5e7a; }
+  .theme-btn[data-theme="dusk"] { background: radial-gradient(circle at 40% 40%, #c084fc, #221a2e); }
+  .theme-btn[data-theme="forest"] { background: radial-gradient(circle at 40% 40%, #4eca8b, #0d1410); }
+  .theme-btn[data-theme="dawn"] { background: radial-gradient(circle at 40% 40%, #f0a855, #fff8f0); }
+  .theme-btn[data-theme="paper"] { background: radial-gradient(circle at 40% 40%, #8ca8c8, #f5f2ec); }
+
+  /* ─── Main Layout ─── */
+  main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 40px 32px 80px;
+  }
+
+  /* ─── Hero ─── */
+  .hero {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+  .hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--accent2);
+    background: var(--accent-bg);
+    border: 1px solid var(--accent-border);
+    padding: 5px 12px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+  }
+  .hero h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(28px, 5vw, 44px);
+    line-height: 1.15;
+    color: var(--text);
+    letter-spacing: -0.5px;
+    margin-bottom: 14px;
+  }
+  .hero h1 em {
+    font-style: italic;
+    color: var(--accent2);
+  }
+  .hero p {
+    color: var(--text2);
+    font-size: 16px;
+    max-width: 540px;
+    margin: 0 auto;
+    line-height: 1.7;
+  }
+
+  /* ─── Score indicator ─── */
+  .score-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin: 24px 0 0;
+  }
+  .score-pill {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--gold);
+    background: var(--gold-bg);
+    padding: 5px 14px;
+    border-radius: 20px;
+    border: 1px solid rgba(212,168,67,0.25);
+  }
+
+  /* ─── Layout grid ─── */
+  .layout-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    align-items: start;
+  }
+  @media (max-width: 760px) {
+    .layout-grid { grid-template-columns: 1fr; }
+    main { padding: 24px 16px 60px; }
+    header { padding: 0 16px; }
+  }
+
+  /* ─── Card ─── */
+  .card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 28px;
+    transition: background var(--transition), border-color var(--transition);
+  }
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 24px;
+  }
+  .card-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: var(--accent-bg);
+    border: 1px solid var(--accent-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    flex-shrink: 0;
+  }
+  .card-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: 0.2px;
+  }
+  .card-subtitle {
+    font-size: 12px;
+    color: var(--text3);
+    margin-top: 1px;
+  }
+
+  /* ─── Form Fields ─── */
+  .field {
+    margin-bottom: 20px;
+  }
+  .field:last-child { margin-bottom: 0; }
+  label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: var(--text2);
+    margin-bottom: 7px;
+  }
+  label span.req { color: var(--accent); }
+
+  input[type="text"],
+  input[type="url"],
+  textarea {
+    width: 100%;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 10px 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.15s, background 0.15s;
+    resize: vertical;
+  }
+  input[type="text"]:focus,
+  input[type="url"]:focus,
+  textarea:focus {
+    border-color: var(--accent);
+    background: var(--surface);
+  }
+  input::placeholder,
+  textarea::placeholder { color: var(--text3); }
+
+  textarea.article-input {
+    min-height: 320px;
+    font-size: 13px;
+    font-family: 'DM Mono', monospace;
+    line-height: 1.6;
+  }
+
+  /* ─── Pillar checkboxes ─── */
+  .pillars-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .pillar-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 10px;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+    font-size: 12px;
+    color: var(--text2);
+    font-weight: 500;
+  }
+  .pillar-item:hover { border-color: var(--border2); }
+  .pillar-item input[type="checkbox"] { accent-color: var(--accent); width: 14px; height: 14px; cursor: pointer; }
+  .pillar-item input:checked ~ span { color: var(--text); }
+
+  /* ─── AI Source pills ─── */
+  .ai-sources {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 8px;
+  }
+  .ai-pill {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: 1.5px solid var(--border);
+    background: var(--bg3);
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text3);
+    transition: all 0.2s;
+    user-select: none;
+    opacity: 0.45;
+  }
+  .ai-pill .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    filter: grayscale(1);
+    transition: filter 0.2s;
+  }
+  .ai-pill[data-ai="gemini"] .dot { background: #4285f4; }
+  .ai-pill[data-ai="chatgpt"] .dot { background: #10a37f; }
+  .ai-pill[data-ai="claude"] .dot { background: #cc785c; }
+  /* mono dots use inline style — grayscale filter handles dimming */
+  .ai-pill:not(.selected) .dot { filter: grayscale(1) brightness(0.6); }
+  .ai-pill.selected {
+    border-color: var(--accent);
+    background: var(--accent-bg);
+    color: var(--text);
+    opacity: 1;
+  }
+
+  /* ─── Generate Button ─── */
+  .btn-generate {
+    width: 100%;
+    padding: 14px 24px;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    letter-spacing: 0.2px;
+    transition: opacity 0.15s, transform 0.12s;
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .btn-generate:hover { opacity: 0.88; transform: translateY(-1px); }
+  .btn-generate:active { transform: translateY(0); opacity: 1; }
+  .btn-generate svg { width: 18px; height: 18px; }
+
+  /* ─── Output section ─── */
+  .output-section {
+    grid-column: 1 / -1;
+    margin-top: 8px;
+  }
+  .output-wrapper {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    transition: all var(--transition);
+    display: none;
+  }
+  .output-wrapper.visible { display: block; }
+  .output-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg3);
+  }
+  .output-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .output-label {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: var(--text2);
+  }
+  .output-stats {
+    display: flex;
+    gap: 8px;
+  }
+  .stat-badge {
+    font-size: 11px;
+    padding: 3px 9px;
+    border-radius: 12px;
+    font-weight: 500;
+    background: var(--accent-bg);
+    color: var(--accent2);
+    border: 1px solid var(--accent-border);
+  }
+  .btn-copy {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 16px;
+    background: var(--surface);
+    border: 1px solid var(--border2);
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .btn-copy:hover { background: var(--surface2); border-color: var(--accent); color: var(--accent2); }
+  .btn-copy.copied {
+    background: var(--success-bg);
+    border-color: var(--success);
+    color: var(--success);
+  }
+  .btn-close-output {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    padding: 7px 13px;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text3);
+    cursor: pointer;
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .btn-close-output:hover { border-color: var(--border2); color: var(--text); background: var(--surface); }
+  .btn-close-output svg { width: 14px; height: 14px; }
+  .output-wrapper {
+    transition: opacity 0.3s, transform 0.3s;
+  }
+  .output-wrapper.closing {
+    opacity: 0;
+    transform: translateY(8px);
+    pointer-events: none;
+  }
+  .output-content {
+    padding: 24px;
+    max-height: 600px;
+    overflow-y: auto;
+  }
+  .output-content pre {
+    font-family: 'DM Mono', monospace;
+    font-size: 12.5px;
+    line-height: 1.75;
+    color: var(--text);
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+
+  /* ─── Output Tabs ─── */
+  .output-tabs {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg3);
+    padding: 0 16px;
+    overflow-x: auto;
+  }
+  .output-tab {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 11px 18px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text3);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    white-space: nowrap;
+    transition: color 0.15s, border-color 0.15s;
+    background: transparent;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .output-tab:hover { color: var(--text2); }
+  .output-tab.active { color: var(--text); border-bottom-color: var(--accent); }
+  .output-tab .tab-dot {
+    width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+  }
+  .output-tab.combined {
+    background: linear-gradient(90deg, rgba(66,133,244,0.08), rgba(16,163,127,0.08), rgba(204,120,92,0.08));
+    border-radius: 6px 6px 0 0;
+    color: var(--text2);
+  }
+  .output-tab.combined.active {
+    color: var(--text);
+    border-bottom-color: var(--gold);
+    background: linear-gradient(90deg, rgba(66,133,244,0.13), rgba(16,163,127,0.13), rgba(204,120,92,0.13));
+  }
+  .tab-dot.multi {
+    background: conic-gradient(#4285f4 0% 33%, #10a37f 33% 66%, #cc785c 66% 100%);
+  }
+  .combined-section-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 20px 10px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 0;
+    background: var(--bg3);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: var(--text2);
+  }
+  .combined-section-header .dot {
+    width: 8px; height: 8px; border-radius: 50%;
+  }
+  .combined-block { border-bottom: 2px dashed var(--border); }
+  .single-ai-note {
+    font-size: 11px;
+    color: var(--text3);
+    padding: 8px 20px;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg3);
+    font-style: italic;
+  }
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+
+  /* ─── Divider ─── */
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 32px 0;
+    grid-column: 1 / -1;
+    opacity: 0.6;
+  }
+
+  /* ─── Footer note ─── */
+  .footer-note {
+    text-align: center;
+    margin-top: 40px;
+    font-size: 12px;
+    color: var(--text3);
+  }
+  .footer-note a { color: var(--accent2); text-decoration: none; }
+
+  /* ─── Animations ─── */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .output-wrapper.visible { animation: fadeIn 0.3s ease; }
+
+  /* ─── Score Selector ─── */
+  .score-selector {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 6px;
+  }
+  .score-option {
+    position: relative;
+    cursor: pointer;
+    flex: 1;
+    min-width: 90px;
+  }
+  .score-option input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  .score-tile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    padding: 10px 8px 9px;
+    background: var(--bg3);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.15s;
+    text-align: center;
+  }
+  .score-option:hover .score-tile { border-color: var(--border2); }
+  .score-option input:checked + .score-tile {
+    border-color: var(--accent);
+    background: var(--accent-bg);
+  }
+  .score-number {
+    font-family: 'DM Serif Display', serif;
+    font-size: 20px;
+    color: var(--text);
+    line-height: 1;
+  }
+  .score-option input:checked + .score-tile .score-number { color: var(--accent2); }
+  .score-tier {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: var(--text3);
+    white-space: nowrap;
+  }
+  .score-option input:checked + .score-tile .score-tier { color: var(--accent); }
+  .score-bar-row { font-size: 11px; color: var(--text3); margin-top: 2px; }
+  .score-dots { display: flex; gap: 2px; justify-content: center; margin-top: 4px; }
+  .score-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--border2); }
+  .score-option input:checked + .score-tile .score-dot { background: var(--accent); }
+  /* last N dots lit per tier */
+  .tier-82 .score-dot:nth-child(-n+5) { background: var(--border2); }
+  .score-option input:checked + .tier-82 .score-dot:nth-child(-n+6) { background: var(--accent); }
+  .score-option input:checked + .tier-85 .score-dot:nth-child(-n+7) { background: var(--accent); }
+  .score-option input:checked + .tier-90 .score-dot:nth-child(-n+9) { background: var(--accent); }
+  .score-option input:checked + .tier-95 .score-dot { background: var(--accent); }
+
+  /* ─── Clear button ─── */
+  .field-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 7px;
+  }
+  .field-header label { margin-bottom: 0; }
+  .btn-clear {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text3);
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 4px 10px;
+    cursor: pointer;
+    transition: all 0.15s;
+    letter-spacing: 0.2px;
+  }
+  .btn-clear:hover {
+    color: var(--text);
+    border-color: var(--border2);
+    background: var(--surface);
+  }
+  .btn-clear:active { transform: scale(0.97); }
+  .btn-clear svg { width: 12px; height: 12px; flex-shrink: 0; }
+
+  /* ─── Info tooltip hint ─── */
+  .hint {
+    font-size: 11px;
+    color: var(--text3);
+    margin-top: 5px;
+    line-height: 1.5;
+  }
+</style>
+</head>
+<body class="theme-midnight">
+
+<header>
+  <div class="logo">
+    <div class="logo-icon">✦</div>
+    <span class="logo-text">PromptForge</span>
+    <span class="logo-badge">SEO Benchmark</span>
+  </div>
+  <div class="theme-switcher">
+    <span class="theme-label">Theme</span>
+    <button class="theme-btn active" data-theme="midnight" title="Midnight Black" onclick="setTheme(this)"></button>
+    <button class="theme-btn" data-theme="dusk" title="Dusk" onclick="setTheme(this)"></button>
+    <button class="theme-btn" data-theme="forest" title="Forest" onclick="setTheme(this)"></button>
+    <button class="theme-btn" data-theme="dawn" title="Dawn" onclick="setTheme(this)"></button>
+    <button class="theme-btn" data-theme="paper" title="Paper" onclick="setTheme(this)"></button>
+  </div>
+</header>
+
+<main>
+  <div class="hero">
+    <div class="hero-eyebrow">✦ Master Prompt Generator</div>
+    <h1>Rewrite Content to <em id="hero-score-label">Score 8.2+</em><br>Every Time</h1>
+    <p>Fill in your content details below. The tool generates a master prompt fusing Gemini, ChatGPT, and Claude strategies — ready to paste into any AI.</p>
+    <div class="score-bar">
+      <div class="score-pill" id="hero-pill">⭐ Target Score: 8.2 / 10</div>
+      <div class="score-pill">📋 10 Quality Pillars</div>
+      <div class="score-pill">🔍 E-E-A-T Optimized</div>
+    </div>
+  </div>
+
+  <div class="layout-grid">
+
+    <!-- Left: Content Details -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">📝</div>
+        <div>
+          <div class="card-title">Content Details</div>
+          <div class="card-subtitle">Article metadata & keywords</div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Content Title <span class="req">*</span></label>
+        <input type="text" id="inp-title" placeholder="e.g. 5 Letter Words Starting With A (Complete List)">
+      </div>
+      <div class="field">
+        <label>Primary Keyword <span class="req">*</span></label>
+        <input type="text" id="inp-primary" placeholder="e.g. 5 letter words starting with a">
+      </div>
+      <div class="field">
+        <label>Supporting / LSI Keywords</label>
+        <input type="text" id="inp-supporting" placeholder="e.g. words start with a, a letter words, wordle solver">
+        <div class="hint">Separate with commas</div>
+      </div>
+      <div class="field">
+        <label>Website URL</label>
+        <input type="url" id="inp-url" placeholder="https://yoursite.com/">
+      </div>
+      <div class="field">
+        <label>Target Audience</label>
+        <input type="text" id="inp-audience" placeholder="e.g. Wordle players, Scrabble players, crossword solvers">
+      </div>
+      <div class="field">
+        <label>Target Quality Score <span class="req">*</span></label>
+        <div class="hint" style="margin-bottom:10px;">Higher targets = stricter prompt, more mandatory rewrites, deeper information gain requirements</div>
+        <div class="score-selector">
+          <label class="score-option">
+            <input type="radio" name="target-score" value="8.2" checked onchange="onScoreChange(this)">
+            <div class="score-tile tier-82">
+              <div class="score-dots"><span class="score-dot"></span><span class="score-dot"></span><span class="score-dot"></span><span class="score-dot"></span><span class="score-dot"></span><span class="score-dot"></span><span class="score-dot"></span><span class="score-dot"></span><span class="score-dot"></span><span class="score-dot"></span></div>
+              <div class="score-number">8.2+</div>
+              <div class="score-tier">Standard</div>
+              <div class="score-bar-row">Good to Great</div>
+            </div>
+          </label>
+          <label class="score-option">
+            <input type="radio" name="target-score" value="8.5" onchange="onScoreChange(this)">
+            <div class="score-tile tier-85">
+              <div class="score-dots"><span class="score-dot"></span><span class="score-dot"></span><span class="score-dot"></span><span class="score-dot"></span><span class="score-dot"></span><span class="score-dot"></span><span class="score-dot"></span><span class="score-dot"></span><span class="score-dot"></span><span class="score-dot"></span></div>
+              <div class="score-number">8.5+</div>
+              <div class="score-tier">Strong</div>
+              <div class="score-bar-row">Page 1 Contender</div>
+            </div>
+          </label>
+          <label class="score-option">
+            <input type="radio" name="target-score" value="9.0" onchange="onScoreChange(this)">
+            <div class="score-tile tier-90">
+              <div class="score-dots"><span class="score-dot"></span><span class="score-dot"></span><span class="score-dot"></span><span class="score-dot"></span><span class="score-dot"></span><span class="score-dot"></span><span class="score-dot"></span><span class="score-dot"></span><span class="score-dot"></span><span class="score-dot"></span></div>
+              <div class="score-number">9.0+</div>
+              <div class="score-tier">Expert</div>
+              <div class="score-bar-row">Top 3 Quality</div>
+            </div>
+          </label>
+          <label class="score-option">
+            <input type="radio" name="target-score" value="9.5" onchange="onScoreChange(this)">
+            <div class="score-tile tier-95">
+              <div class="score-dots"><span class="score-dot"></span><span class="score-dot"></span><span class="score-dot"></span><span class="score-dot"></span><span class="score-dot"></span><span class="score-dot"></span><span class="score-dot"></span><span class="score-dot"></span><span class="score-dot"></span><span class="score-dot"></span></div>
+              <div class="score-number">9.5+</div>
+              <div class="score-tier">Elite</div>
+              <div class="score-bar-row">#1 Ranking Target</div>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Current Score (if known)</label>
+        <input type="text" id="inp-score" placeholder="e.g. 6.2/10 across AI audits">
+      </div>
+
+      <div class="field">
+        <label>Monetization Type</label>
+        <div class="ai-sources" id="mono-sources">
+          <div class="ai-pill selected" data-mono="adsense">
+            <span class="dot" style="background:#4285f4"></span> <span>AdSense</span>
+          </div>
+          <div class="ai-pill selected" data-mono="amazon">
+            <span class="dot" style="background:#ff9900"></span> <span>Amazon Associates</span>
+          </div>
+          <div class="ai-pill selected" data-mono="affiliate">
+            <span class="dot" style="background:#cc785c"></span> <span>Affiliate</span>
+          </div>
+          <div class="ai-pill selected" data-mono="direct">
+            <span class="dot" style="background:#10a37f"></span> <span>Direct Sales</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Right: Quality Pillars + AI Source -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-icon">⚙️</div>
+        <div>
+          <div class="card-title">Prompt Settings</div>
+          <div class="card-subtitle">Customize the generated prompt</div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>AI Destination</label>
+        <div class="hint" style="margin-bottom:8px;">Which AI will receive this prompt?</div>
+        <div class="ai-sources">
+          <div class="ai-pill selected" data-ai="gemini" onclick="toggleAI(this)">
+            <span class="dot"></span> Gemini
+          </div>
+          <div class="ai-pill selected" data-ai="chatgpt" onclick="toggleAI(this)">
+            <span class="dot"></span> ChatGPT
+          </div>
+          <div class="ai-pill selected" data-ai="claude" onclick="toggleAI(this)">
+            <span class="dot"></span> Claude
+          </div>
+        </div>
+      </div>
+
+      <div class="field" style="margin-top:20px;">
+        <label>Quality Pillars to Enforce</label>
+        <div class="hint" style="margin-bottom:8px;">All checked = full benchmark prompt enforced</div>
+        <div class="pillars-grid">
+          <label class="pillar-item"><input type="checkbox" checked id="p1"><span>Search Intent Alignment</span></label>
+          <label class="pillar-item"><input type="checkbox" checked id="p2"><span>Data Accuracy & Depth</span></label>
+          <label class="pillar-item"><input type="checkbox" checked id="p3"><span>Structure & Scannability</span></label>
+          <label class="pillar-item"><input type="checkbox" checked id="p4"><span>Zero-Fluff Compliance</span></label>
+          <label class="pillar-item"><input type="checkbox" checked id="p5"><span>Keyword Optimization</span></label>
+          <label class="pillar-item"><input type="checkbox" checked id="p6"><span>E-E-A-T & Trust Signals</span></label>
+          <label class="pillar-item"><input type="checkbox" checked id="p7"><span>Featured Snippet Ready</span></label>
+          <label class="pillar-item"><input type="checkbox" checked id="p8"><span>Semantic Richness</span></label>
+          <label class="pillar-item"><input type="checkbox" checked id="p9"><span>Information Gain</span></label>
+          <label class="pillar-item"><input type="checkbox" checked id="p10"><span>Meta & CTR Optimization</span></label>
+        </div>
+      </div>
+
+      <div class="field" style="margin-top:20px;">
+        <label>Output Sections to Request</label>
+        <div class="pillars-grid">
+          <label class="pillar-item"><input type="checkbox" checked id="o1"><span>Improved Meta Title</span></label>
+          <label class="pillar-item"><input type="checkbox" checked id="o2"><span>Meta Description</span></label>
+          <label class="pillar-item"><input type="checkbox" checked id="o3"><span>URL Slug</span></label>
+          <label class="pillar-item"><input type="checkbox" checked id="o4"><span>Full Rewrite</span></label>
+          <label class="pillar-item"><input type="checkbox" checked id="o5"><span>E-E-A-T Additions</span></label>
+          <label class="pillar-item"><input type="checkbox" checked id="o6"><span>Internal Link Ideas</span></label>
+          <label class="pillar-item"><input type="checkbox" checked id="o7"><span>Schema/FAQ Ideas</span></label>
+          <label class="pillar-item"><input type="checkbox" checked id="o8"><span>Final Quality Score</span></label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Full-width article input -->
+    <div class="card" style="grid-column: 1 / -1;">
+      <div class="card-header" style="justify-content: space-between;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div class="card-icon">📄</div>
+          <div>
+            <div class="card-title">Original Article Content</div>
+            <div class="card-subtitle">Paste your full existing article/content here</div>
+          </div>
+        </div>
+        <button class="btn-clear" onclick="clearArticle()" title="Clear article content">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+          </svg>
+          Reset / Clear
+        </button>
+      </div>
+      <div class="field">
+        <textarea class="article-input" id="inp-article" placeholder="Paste your full article content here...
+
+The generated prompt will wrap this content with all necessary instructions for the AI to rewrite it to your chosen quality score.
+
+Tip: Include the full article as-is — headings, body text, FAQs, tables, everything."></textarea>
+      </div>
+      <button class="btn-generate" onclick="generatePrompt()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+        </svg>
+        Generate Master Prompt
+      </button>
+    </div>
+
+    <!-- Output -->
+    <div class="output-section">
+      <div class="output-wrapper" id="output-wrapper">
+        <div class="output-toolbar">
+          <div class="output-meta">
+            <span class="output-label">Generated Prompt</span>
+            <div class="output-stats">
+              <span class="stat-badge" id="stat-chars">— chars</span>
+              <span class="stat-badge" id="stat-words">— words</span>
+              <span class="stat-badge" id="stat-pillars">10 pillars</span>
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <button class="btn-copy" id="copy-btn" onclick="copyPrompt()">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+              </svg>
+              Copy Full Prompt
+            </button>
+            <button class="btn-close-output" onclick="closeOutput()" title="Close & reset output">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+              </svg>
+              Close
+            </button>
+          </div>
+        </div>
+        <div id="output-tabs-bar" class="output-tabs" style="display:none;"></div>
+        <div id="output-tabs-content" class="output-content">
+          <pre id="output-text"></pre>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer-note">
+    PromptForge — Content Quality Benchmark Tool &nbsp;|&nbsp; Target: 8.2+ / 10 across all pillars
+  </div>
+</main>
+
+<script>
+  // ─── Theme Toggle ───
+  function setTheme(btn) {
+    document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const t = btn.dataset.theme;
+    document.body.className = '';
+    if (t !== 'midnight') document.body.classList.add('theme-' + t);
+    else document.body.classList.add('theme-midnight');
+  }
+
+  // ─── Score Tier Config ───
+  const SCORE_TIERS = {
+    '8.2': {
+      label: 'Score 8.2+', pill: '⭐ Target Score: 8.2 / 10',
+      roleLevel: 'Senior SEO Editor and Content Strategist',
+      intensity: 'Good-to-Great rewrite',
+      infoGainCount: 2, uniqueSections: 1,
+      factChecking: 'Remove unsupported claims and qualify uncertain statements.',
+      fluffRule: 'Remove obvious filler, generic AI phrasing, and empty transitions.',
+      eeatNote: 'Add an author byline, last-updated date, and one source verification disclosure.',
+      selfScoreNote: 'Average must reach 8.2+. If any pillar is below 7.5, revise before submitting.',
+      extraDemands: '',
+    },
+    '8.5': {
+      label: 'Score 8.5+', pill: '🔥 Target Score: 8.5 / 10',
+      roleLevel: 'Senior SEO Editor, Topical Authority Architect, and Google Quality Rater',
+      intensity: 'Strong professional rewrite — every section must earn its place',
+      infoGainCount: 3, uniqueSections: 2,
+      factChecking: 'Every claim must be (a) self-evident, (b) cited with a named source, or (c) qualified. Remove all absolute language.',
+      fluffRule: 'Remove ALL filler — including subtle hedging sentences, obvious transitions, and any section a user could skip without loss.',
+      eeatNote: 'Add: author byline, last-updated date, source verification, editorial methodology note, and at least one named trusted external reference.',
+      selfScoreNote: 'Average must reach 8.5+. If any single pillar falls below 8.0, revise that section before submitting.',
+      extraDemands: `ADDITIONAL REQUIREMENTS FOR 8.5+:
+  • The article must outperform at least the top 5 Google results — not just the average competitor
+  • Identify at least one "information gap" competitors miss and fill it with unique data or insight
+  • Add a strategy section that no simple word-list or dictionary site currently offers`,
+    },
+    '9.0': {
+      label: 'Score 9.0+', pill: '💎 Target Score: 9.0 / 10',
+      roleLevel: 'Expert SEO Strategist, Human Content Authority, and SERP Domination Specialist',
+      intensity: 'Expert-level full content overhaul — treat this as a complete rebuild, not an edit',
+      infoGainCount: 4, uniqueSections: 3,
+      factChecking: 'Apply journalist-level fact standards: every claim must be verifiable by a named, credible source. Add inline references or explicit disclaimers. Remove anything unverifiable.',
+      fluffRule: 'Apply zero-tolerance fluff policy. Run a sentence-by-sentence audit. If a sentence does not add measurable value, delete it. No exceptions.',
+      eeatNote: 'Full E-E-A-T overhaul: named expert byline with credentials, last-updated date, full methodology disclosure, inline source citations, external links to authoritative references, and a trust statement at the footer.',
+      selfScoreNote: 'Average MUST be 9.0+. Every individual pillar must score 8.5 minimum. If any pillar is below 8.5, rewrite that section entirely before submitting.',
+      extraDemands: `ADDITIONAL REQUIREMENTS FOR 9.0+:
+  • Simulate a competitor gap analysis: identify what the top 3 results are missing and fill those gaps explicitly
+  • Add at least 3 unique data points or sub-sections NOT found on any of the top 10 competing pages
+  • The article must be genuinely useful enough to bookmark — not just rank
+  • Introduce at least one proprietary framework, checklist, or decision tree the user can apply immediately
+  • Internal links must be woven contextually — not appended as a list
+  • Featured snippet optimization must target at least 2 answer formats (definition box + numbered list OR table)
+  • The introduction must pass the "1-second test": within the first line the user knows exactly what value they are getting`,
+    },
+    '9.5': {
+      label: 'Score 9.5+', pill: '🏆 Target Score: 9.5 / 10',
+      roleLevel: 'World-Class Content Authority, Elite SEO Strategist, and #1 Ranking Architect',
+      intensity: 'Elite complete rebuild — produce a definitive reference article that will rank #1 and be cited by others',
+      infoGainCount: 5, uniqueSections: 4,
+      factChecking: 'Apply academic-standard fact rigor: every claim sourced, every statistic named, every list dictionary-verified. Any unverifiable claim is removed or explicitly framed as opinion/strategy insight.',
+      fluffRule: 'Absolute zero-fluff policy. Every sentence must pass this test: "If deleted, would a real user notice the loss?" If not — delete it. Word economy is mandatory.',
+      eeatNote: 'Maximum E-E-A-T: named expert byline with bio and credentials, publication + last-reviewed dates, complete editorial methodology reference, all facts linked to primary sources, author expertise demonstrated through original insight, verification sources in footer.',
+      selfScoreNote: 'Average MUST be 9.5+. Every single pillar must score 9.0 minimum. If any pillar falls below 9.0 — rebuild that section from scratch. Do not patch, rebuild.',
+      extraDemands: `ADDITIONAL REQUIREMENTS FOR 9.5+ (ELITE TIER):
+  • This article must be the single best resource on the internet for this topic — better than Wikipedia, better than dictionary sites, better than every current top-10 result
+  • Build a complete content asset: strategy section, data section, quick-reference section, expert FAQ, and actionable takeaways
+  • Add at least 5 unique information gain elements NOT found anywhere in the current top 20 SERP results
+  • Structure must be so clear that a user can navigate it on mobile in under 10 seconds to find any answer
+  • Write for two audiences simultaneously: (1) the quick skimmer who needs a fast answer, and (2) the deep reader who wants complete expertise — the structure must serve both
+  • Every H2 and H3 heading must independently function as a featured snippet candidate
+  • The article must reduce bounce rate to near-zero: every section must create a reason to stay or scroll
+  • Deliver a "Publish Verdict" at the end: a professional editorial judgment on whether the content is ready to publish, with specific reasons`,
+    },
+  };
+
+  function onScoreChange(radio) {
+    const tier = SCORE_TIERS[radio.value];
+    document.getElementById('hero-score-label').textContent = tier.label;
+    document.getElementById('hero-pill').textContent = tier.pill;
+  }
+
+  function getTargetScore() {
+    const el = document.querySelector('input[name="target-score"]:checked');
+    return el ? el.value : '8.2';
+  }
+
+  // ─── Clear Article ───
+  function clearArticle() {
+    const ta = document.getElementById('inp-article');
+    ta.value = '';
+    ta.focus();
+    const btn = document.querySelector('.btn-clear');
+    const orig = btn.innerHTML;
+    btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" width="12" height="12"><polyline points="20 6 9 17 4 12"></polyline></svg> Cleared!`;
+    btn.style.color = 'var(--success)';
+    btn.style.borderColor = 'var(--success)';
+    setTimeout(() => {
+      btn.innerHTML = orig;
+      btn.style.color = '';
+      btn.style.borderColor = '';
+    }, 1800);
+  }
+
+  // ─── AI Toggle ───
+  function toggleAI(el) {
+    el.classList.toggle('selected');
+  }
+
+  // ─── Mono Toggle ───
+  document.querySelectorAll('#mono-sources .ai-pill').forEach(pill => {
+    pill.addEventListener('click', () => pill.classList.toggle('selected'));
+  });
+
+  // ─── Get selected pillars ───
+  function getSelectedPillars() {
+    const names = [
+      'Search Intent Alignment','Data Accuracy & Depth','Structure & Scannability',
+      'Zero-Fluff Compliance','Keyword Optimization','E-E-A-T & Trust Signals',
+      'Featured Snippet Readiness','Semantic Richness','Information Gain',
+      'Meta & CTR Optimization'
+    ];
+    return names.filter((_, i) => document.getElementById('p' + (i+1)).checked);
+  }
+
+  function getSelectedOutputs() {
+    const names = [
+      'IMPROVED SEO TITLE','IMPROVED META DESCRIPTION','IMPROVED URL SLUG',
+      'FULLY REWRITTEN ARTICLE','E-E-A-T ADDITIONS & TRUST SIGNALS',
+      'INTERNAL LINK OPPORTUNITIES','SCHEMA / FAQ IDEAS',
+      'FINAL QUALITY SCORE (per pillar, avg out of 10)'
+    ];
+    return names.filter((_, i) => document.getElementById('o' + (i+1)).checked);
+  }
+
+  function getMonetization() {
+    const map = { adsense: 'Google AdSense', amazon: 'Amazon Associates', affiliate: 'Affiliate Marketing', direct: 'Direct Sales' };
+    return Array.from(document.querySelectorAll('#mono-sources .ai-pill.selected'))
+      .map(el => map[el.dataset.mono]).filter(Boolean);
+  }
+
+  // ─── AI Configs — each AI gets a genuinely different prompt strategy ───
+  const AI_CONFIGS = {
+    gemini: {
+      name: 'Gemini',
+      color: '#4285f4',
+      emoji: '♊',
+      rolePrefix: 'You are operating inside Google Gemini. Leverage your deep alignment with Google Search quality standards.',
+      thinkingStyle: 'Think like a senior Google Search Quality Rater applying the Google Search Quality Evaluator Guidelines (SQEG). You have direct insight into what Google rewards and penalizes.',
+      formatNote: `OUTPUT FORMAT RULES FOR GEMINI:
+  • Use clear numbered sections and nested bullet points — Gemini renders these cleanly
+  • For tables, use proper Markdown table syntax (| col | col |)
+  • Use **bold** for all key terms and section labels
+  • Keep paragraphs short: 2–4 sentences maximum for mobile readability
+  • Use > blockquote syntax for Pro Tips and callout boxes`,
+      specialStrengths: `LEVERAGE GEMINI'S SPECIFIC STRENGTHS:
+  • Apply Google's own E-E-A-T framework as the primary quality filter
+  • Think from the perspective of Google's Helpful Content System (HCU) — what does Google want to reward?
+  • Use your knowledge of Google's SQEG to flag any section that would trigger a quality downgrade
+  • Apply Google's YMYL (Your Money Your Life) awareness where relevant
+  • Structure content to maximize Google's featured snippet, PAA, and Knowledge Panel capture
+  • Prioritize: what would a Google Search Quality Rater score as "Meets" or "Fully Meets"?`,
+      outputNote: 'Return all sections in clean Markdown. Do not truncate any section.',
+      scoringNote: 'At the end, use a Markdown table to show your self-scores per pillar.',
+    },
+    chatgpt: {
+      name: 'ChatGPT',
+      color: '#10a37f',
+      emoji: '🤖',
+      rolePrefix: 'You are operating inside ChatGPT (GPT-4o). Apply your strongest capabilities in structured long-form content generation and SEO strategy.',
+      thinkingStyle: 'Think as an elite commercial content strategist whose articles consistently rank #1 and generate significant AdSense and affiliate revenue. Every decision is driven by: does this increase rankings, dwell time, and conversions?',
+      formatNote: `OUTPUT FORMAT RULES FOR CHATGPT:
+  • Follow the section structure EXACTLY — do not reorder, skip, or merge sections
+  • Complete EVERY section in full — do NOT truncate or summarize with "..."
+  • Use ━━━ dividers between major sections for clean visual separation
+  • Use **bold** for skimmable hooks at the start of key sentences
+  • Use proper Markdown headers (## H2, ### H3) throughout
+  • If the article is long, do NOT stop mid-output — continue until the full article is complete`,
+      specialStrengths: `LEVERAGE CHATGPT'S SPECIFIC STRENGTHS:
+  • Apply your commercial content instincts: every section should serve both the user AND the monetization goals
+  • Use your strong narrative continuity to make the article read as one coherent, expert piece — not stitched-together sections
+  • Apply your persuasive writing ability to make the intro hook irresistible within the first 2 sentences
+  • Use your knowledge of SERP patterns to write headings that match real search queries
+  • Apply your understanding of AdSense/affiliate UX: structure content so ad placements don't disrupt reading flow
+  • Leverage your strong FAQ generation: write PAA-optimized questions that match actual Google autocomplete patterns`,
+      outputNote: 'Return all sections as clean Markdown. If you reach your output limit, pause and wait for "continue" — do NOT summarize remaining sections.',
+      scoringNote: 'At the end, show a structured scoring breakdown: Pillar | Score | What You Did. Then give the overall average.',
+    },
+    claude: {
+      name: 'Claude',
+      color: '#cc785c',
+      emoji: '🔮',
+      rolePrefix: 'You are operating inside Claude (Anthropic). Apply your strongest capabilities: nuanced editorial judgment, human-sounding prose, and meticulous factual accuracy.',
+      thinkingStyle: 'Think as a senior human editor who has personally played Wordle and Scrabble, researched word game strategy, and cares deeply about giving the reader genuinely useful, accurate information. Your writing must feel like it was crafted by a knowledgeable person, not generated by an AI.',
+      formatNote: `OUTPUT FORMAT RULES FOR CLAUDE:
+  • Wrap each major output section in XML tags for clean parsing:
+    <meta_title>...</meta_title>
+    <meta_description>...</meta_description>
+    <article>...</article>
+    <eeat_additions>...</eeat_additions>
+    <internal_links>...</internal_links>
+    <score_breakdown>...</score_breakdown>
+  • Inside the article, use standard Markdown (## H2, ### H3, **bold**, tables)
+  • Use <callout> tags for Pro Tips and important notices
+  • Keep your prose varied — mix short punchy sentences with longer analytical ones`,
+      specialStrengths: `LEVERAGE CLAUDE'S SPECIFIC STRENGTHS:
+  • Apply your strong editorial instinct: read the full article first, identify the 3 biggest weaknesses, fix those first
+  • Use your nuanced language model to catch and fix: unnatural keyword stuffing, repetitive sentence structures, and AI-sounding phrasing patterns
+  • Apply your factual accuracy strength: flag every claim you cannot verify with a [VERIFY] marker, then either fix it or qualify it
+  • Use your prose quality to make transitions invisible — the article should flow so naturally the reader never notices the structure
+  • Leverage your self-reflection capability: after writing each section, re-read it as a skeptical reader and ask "would I trust this?"
+  • Apply your context window advantage: maintain consistency of tone, terminology, and voice across the entire article length`,
+      outputNote: 'Return output using the XML section tags specified above. Inside each tag, use clean Markdown.',
+      scoringNote: 'Wrap your scoring in <score_breakdown> tags. For each pillar, give: score, one sentence on what you changed, and one sentence on what would push it even higher.',
+    },
+  };
+
+  function getSelectedAIs() {
+    return Array.from(document.querySelectorAll('.ai-pill[data-ai].selected'))
+      .map(el => el.dataset.ai).filter(Boolean);
+  }
+
+  function buildPrompt(aiKey, { title, primary, supporting, url, audience, monoStr, scoreNote, targetScore, tier, pillars, outputs, article }) {
+    const ai = AI_CONFIGS[aiKey];
+    return `══════════════════════════════════════════════
+MASTER SEO CONTENT REWRITE PROMPT  [${ai.name.toUpperCase()}]
+Target Benchmark: Minimum ${targetScore} / 10  [${tier.intensity.toUpperCase()}]
+══════════════════════════════════════════════
+
+━━━━━━━━━━━━━━━━━ ROLE ━━━━━━━━━━━━━━━━━
+
+${ai.rolePrefix}
+
+You are a ${tier.roleLevel}. You combine the expertise of:
+  • A Senior SEO Strategist who understands Google's Helpful Content System (HCU)
+  • A Google Quality Rater who evaluates E-E-A-T at the highest standard
+  • A Topical Authority Architect who builds lasting content clusters
+  • A Human Content Editor who surgically eliminates AI-generated filler
+  • A UX Specialist who optimizes for mobile-first readability and dwell time
+  • A SERP Competitor Analyst who spots and fills information gaps
+
+${ai.thinkingStyle}
+
+YOUR ONLY GOAL: Rewrite the provided article so it achieves a MINIMUM score of ${targetScore} / 10
+across all quality pillars — and realistically competes with the top results on Google Page 1.
+
+━━━━━━━━━━━ ARTICLE CONTEXT ━━━━━━━━━━━━
+
+Article Title    : ${title || '[Not provided — infer from content]'}
+Primary Keyword  : ${primary || '[Not specified]'}
+Supporting / LSI : ${supporting || '[Not specified]'}
+Website          : ${url || '[Not specified]'}
+Target Audience  : ${audience}
+Monetization     : ${monoStr}
+${scoreNote}
+
+━━━━━━━━━━━ BUSINESS OBJECTIVE ━━━━━━━━━━
+
+This content is published on a real monetized website. Every improvement must serve:
+  1. Higher organic Google rankings for the primary keyword
+  2. Longer dwell time and lower bounce rate
+  3. Stronger topical authority signals for the domain
+  4. Better user satisfaction for the specific target audience
+  5. Improved featured snippet capture across multiple answer formats
+
+━━━━━━━━━━━━━ TARGET: ${targetScore}+ ━━━━━━━━━━━━━
+
+This is a ${tier.intensity}.
+Do NOT treat this as a light polish or surface-level edit.
+You must score ${targetScore} or higher on EVERY quality pillar.
+
+━━━━━━━━━━ QUALITY PILLARS TO HIT ━━━━━━━
+
+Score ${targetScore}+ on EACH of the following pillars:
+${pillars.map((p, i) => `  ${i + 1}. ${p}`).join('\n')}
+
+━━━━━━━━━━ MANDATORY IMPROVEMENTS ━━━━━━━
+
+ALL of the following are required — no exceptions:
+
+1. ZERO FLUFF
+   ${tier.fluffRule}
+   NEVER use: "you are in the right place," "look no further," "in this article we will,"
+   "Furthermore," "In addition," "It is worth noting," or any robotic AI transition.
+
+2. E-E-A-T SIGNALS
+   ${tier.eeatNote}
+   Every trust signal must feel natural — not bolted on.
+
+3. INFORMATION GAIN (${tier.infoGainCount}+ unique elements required)
+   Add at least ${tier.infoGainCount} unique data points, insights, or sub-sections NOT found on
+   typical competitor pages. Required: ${tier.uniqueSections}+ new H2/H3 sections with original insight.
+   Information Gain is the single most important ranking differentiator.
+
+4. SEARCH INTENT
+   The opening 100 words must immediately deliver value.
+   No throat-clearing. No explaining what the user is about to read.
+   The first sentence must pass the "1-second test": user knows instantly what they get.
+
+5. STRUCTURE & MOBILE UX
+   • Break all text walls into scannable sections
+   • Use H2 / H3 hierarchy correctly — only one H1 (the title)
+   • Organize long lists into 3–4 column grids or alphabetical sub-groups
+   • Bold key terms for skimmability — never over-bold
+   • Add a "Pro Tip" callout for the single highest-value insight
+   • Every H2 and H3 heading must independently communicate value
+
+6. FACTUAL ACCURACY
+   ${tier.factChecking}
+
+7. KEYWORD OPTIMIZATION
+   • Primary keyword in: title, H1, first 100 words, at least one H2, meta description
+   • Supporting keywords: 1–2 contextually natural mentions each
+   • Semantic/LSI terms: 1–2 times each — never keyword-stuffed
+   • Primary keyword density: 1–2% maximum
+
+8. FEATURED SNIPPET OPTIMIZATION
+   • Write at least one concise definition or answer paragraph (40–60 words) for snippet capture
+   • Include a PAA-style FAQ with direct, specific answers
+   • Use numbered lists or tables where a structured snippet is likely
+   • Target at least 2 snippet formats in the same article
+
+9. CTR OPTIMIZATION
+   • Meta title: primary keyword + current year + power hook (60 chars max)
+   • Meta description: 145–160 characters — include primary keyword + a clear benefit
+   • Suggest an optimized URL slug: lowercase, hyphens only, primary keyword
+
+10. INTERNAL LINKING
+    • Write 3–5 contextual internal link placements as natural sentences
+    • Place at least 2 internal links in the article body — not just the footer
+    • Close with a "Topical Cluster" section linking to related articles in flowing prose
+${tier.extraDemands ? '\n' + tier.extraDemands + '\n' : ''}
+━━━━━━━━━━ ${ai.name.toUpperCase()}-SPECIFIC INSTRUCTIONS ━━━━━━━━━
+
+${ai.specialStrengths}
+
+━━━━━━━━━━━━ STYLE & TONE RULES ━━━━━━━━━
+
+  ✓ Write for REAL PEOPLE solving REAL PROBLEMS — not for search bots
+  ✓ Every sentence must earn its place — no padding, no filler
+  ✓ Use active voice, be specific, be direct
+  ✓ Sound like an expert who has personally used this information
+  ✓ The content must FEEL human-edited — not AI-generated
+
+━━━━━━━━━━━━ DO NOT ━━━━━━━━━━━━━━━━━━━
+
+  ✗ Add fake claims or invented statistics
+  ✗ Invent dictionary validations or endorsements you cannot verify
+  ✗ Use vague SEO clichés or generic filler language
+  ✗ Over-explain concepts the target audience already understands
+  ✗ Repeat the primary keyword unnaturally
+  ✗ Submit output that scores below ${targetScore} — revise first
+
+━━━━━━━━━━━━ REQUIRED OUTPUT ━━━━━━━━━━━
+
+${ai.outputNote}
+
+Return your response in this EXACT order:
+${outputs.map((o, i) => `  SECTION ${i + 1} — ${o}`).join('\n')}
+
+━━━━━━━━━━ ${ai.name.toUpperCase()} FORMAT RULES ━━━━━━━━━━
+
+${ai.formatNote}
+
+━━━━━━━━━━ SELF-SCORING REQUIREMENT ━━━━━━
+
+After delivering the full rewrite, score your own output:
+  • Rate each quality pillar: 1–10
+  • Calculate the average — it MUST be ${targetScore} or higher
+  • ${ai.scoringNote}
+  • ${tier.selfScoreNote}
+
+Do NOT submit output that fails the ${targetScore} benchmark. Revise the weakest sections first.
+
+━━━━━━━━━━━━ FINAL RULE ━━━━━━━━━━━━━━━
+
+Do NOT behave like a generic AI content writer.
+Behave like a ${tier.roleLevel} who has ranked content #1 and knows exactly what competitors are missing.
+The final article must realistically outrank the current top results for "${primary || 'the primary keyword'}".
+
+══════════════════════════════════════════════
+ORIGINAL ARTICLE TO REWRITE:
+══════════════════════════════════════════════
+
+${article || '[PASTE YOUR FULL ARTICLE CONTENT HERE]'}
+
+══════════════════════════════════════════════
+END OF ARTICLE — BEGIN ${targetScore}+ QUALITY REWRITE FOR ${ai.name.toUpperCase()} NOW
+══════════════════════════════════════════════`;
+  }
+  // ─── Generate Prompt ───
+  function generatePrompt() {
+    const title = document.getElementById('inp-title').value.trim();
+    const primary = document.getElementById('inp-primary').value.trim();
+    const supporting = document.getElementById('inp-supporting').value.trim();
+    const url = document.getElementById('inp-url').value.trim();
+    const audience = document.getElementById('inp-audience').value.trim() || 'General web audience';
+    const score = document.getElementById('inp-score').value.trim();
+    const article = document.getElementById('inp-article').value.trim();
+
+    if (!primary && !article) {
+      alert('Please enter at least a Primary Keyword and your Article Content.');
+      return;
+    }
+
+    const selectedAIs = getSelectedAIs();
+    if (selectedAIs.length === 0) {
+      alert('Please select at least one AI destination (Gemini, ChatGPT, or Claude).');
+      return;
+    }
+
+    const targetScore = getTargetScore();
+    const tier = SCORE_TIERS[targetScore];
+    const pillars = getSelectedPillars();
+    const outputs = getSelectedOutputs();
+    const mono = getMonetization();
+    const monoStr = mono.length ? mono.join(', ') : 'Organic SEO';
+    const scoreNote = score ? `Current audited score: ${score}` : 'Score not yet audited — treat as requiring full improvement.';
+
+    const ctx = { title, primary, supporting, url, audience, monoStr, scoreNote, targetScore, tier, pillars, outputs, article };
+    const prompts = {};
+    selectedAIs.forEach(ai => { prompts[ai] = buildPrompt(ai, ctx); });
+
+    // Build combined prompt — all AIs separated by clear dividers
+    if (selectedAIs.length > 1) {
+      const divider = `\n\n${'█'.repeat(60)}\n`;
+      prompts['combined'] = selectedAIs.map(ai => {
+        const cfg = AI_CONFIGS[ai];
+        return `${'═'.repeat(60)}
+▶▶▶  PROMPT FOR ${cfg.name.toUpperCase()}  ${cfg.emoji}
+${'═'.repeat(60)}
+
+${prompts[ai]}`;
+      }).join(divider);
+    }
+
+    const firstPrompt = prompts[selectedAIs[0]];
+    const chars = firstPrompt.length.toLocaleString();
+    const words = firstPrompt.split(/\s+/).filter(Boolean).length.toLocaleString();
+    document.getElementById('stat-chars').textContent = chars + ' chars';
+    document.getElementById('stat-words').textContent = words + ' words';
+    document.getElementById('stat-pillars').textContent = pillars.length + ' pillars — ' + targetScore + '+';
+
+    const tabsBar = document.getElementById('output-tabs-bar');
+    const tabsContent = document.getElementById('output-tabs-content');
+
+    if (selectedAIs.length === 1) {
+      tabsBar.style.display = 'none';
+      tabsContent.innerHTML = `<pre>${escHtml(firstPrompt)}</pre>`;
+    } else {
+      tabsBar.style.display = 'flex';
+
+      // Individual AI tabs + Combined tab
+      const aiTabs = selectedAIs.map((ai, i) => `
+        <button class="output-tab ${i === 0 ? 'active' : ''}" onclick="switchTab('${ai}')" id="tab-btn-${ai}">
+          <span class="tab-dot" style="background:${AI_CONFIGS[ai].color}"></span>
+          ${AI_CONFIGS[ai].emoji} ${AI_CONFIGS[ai].name}
+        </button>`).join('');
+
+      const combinedTab = `
+        <button class="output-tab combined" onclick="switchTab('combined')" id="tab-btn-combined" style="margin-left:auto;">
+          <span class="tab-dot multi"></span>
+          ⚡ All Combined
+        </button>`;
+
+      tabsBar.innerHTML = aiTabs + combinedTab;
+
+      // Individual panels
+      const aiPanels = selectedAIs.map((ai, i) => `
+        <div class="tab-panel ${i === 0 ? 'active' : ''}" id="tab-panel-${ai}">
+          <pre>${escHtml(prompts[ai])}</pre>
+        </div>`).join('');
+
+      // Combined panel — visually split with section headers per AI
+      const combinedBlocks = selectedAIs.map(ai => {
+        const cfg = AI_CONFIGS[ai];
+        return `<div class="combined-block">
+          <div class="combined-section-header">
+            <span class="dot" style="background:${cfg.color}"></span>
+            ${cfg.emoji} ${cfg.name} Prompt
+          </div>
+          <div style="padding:20px 24px"><pre style="margin:0">${escHtml(prompts[ai])}</pre></div>
+        </div>`;
+      }).join('');
+
+      const combinedPanel = `
+        <div class="tab-panel" id="tab-panel-combined">
+          <div style="padding:12px 20px 8px;background:var(--bg3);border-bottom:1px solid var(--border);font-size:12px;color:var(--text3);">
+            ⚡ Combined view — all ${selectedAIs.length} prompts in one copy. Switch to individual tabs to copy each separately.
+          </div>
+          ${combinedBlocks}
+        </div>`;
+
+      tabsContent.innerHTML = aiPanels + combinedPanel;
+    }
+
+    window._generatedPrompts = prompts;
+    window._activeTab = selectedAIs[0];
+
+    const wrapper = document.getElementById('output-wrapper');
+    wrapper.classList.add('visible');
+    wrapper.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    const btn = document.getElementById('copy-btn');
+    btn.classList.remove('copied');
+    const firstName = AI_CONFIGS[selectedAIs[0]].name;
+    btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg> Copy ${firstName} Prompt`;
+  }
+
+  function escHtml(str) {
+    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  function switchTab(aiKey) {
+    document.querySelectorAll('.output-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.getElementById('tab-btn-' + aiKey).classList.add('active');
+    document.getElementById('tab-panel-' + aiKey).classList.add('active');
+    window._activeTab = aiKey;
+    const btn = document.getElementById('copy-btn');
+    btn.classList.remove('copied');
+    if (aiKey === 'combined') {
+      btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg> Copy All Combined`;
+    } else {
+      btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg> Copy ${AI_CONFIGS[aiKey].name} Prompt`;
+    }
+  }
+
+  // ─── Close output ───
+  function closeOutput() {
+    const wrapper = document.getElementById('output-wrapper');
+    wrapper.classList.add('closing');
+    setTimeout(() => {
+      wrapper.classList.remove('visible', 'closing');
+      document.getElementById('output-tabs-content').innerHTML = '';
+      document.getElementById('output-tabs-bar').style.display = 'none';
+      document.getElementById('output-tabs-bar').innerHTML = '';
+      window._generatedPrompts = null;
+      const btn = document.getElementById('copy-btn');
+      btn.classList.remove('copied');
+      btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg> Copy Full Prompt`;
+    }, 300);
+  }
+
+  // ─── Copy active tab prompt ───
+  function copyPrompt() {
+    const activeAI = window._activeTab;
+    const text = window._generatedPrompts && activeAI ? window._generatedPrompts[activeAI] : '';
+    if (!text) return;
+    const btn = document.getElementById('copy-btn');
+    const aiName = AI_CONFIGS[activeAI]?.name || '';
+
+    const doCopy = () => {
+      btn.classList.add('copied');
+      btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg> Copied!`;
+      setTimeout(() => closeOutput(), 1400);
+    };
+
+    navigator.clipboard.writeText(text).then(doCopy).catch(() => {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      doCopy();
+    });
+  }
+</script>
+
+</body>
+</html>
